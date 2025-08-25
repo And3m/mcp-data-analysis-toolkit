@@ -1,0 +1,70 @@
+{
+  "servers": {
+    "basic-server": {
+      "name": "Basic MCP Server",
+      "description": "Simple MCP server with basic tools and resources",
+      "command": ["python", "src/mcp_servers/basic_server.py"],
+      "capabilities": {
+        "tools": ["calculator", "string_utils", "get_current_time"],
+        "resources": ["system_info", "server_config", "help"],
+        "prompts": ["calculation_helper", "text_processing"]
+      },
+      "recommended_for": ["learning", "basic_automation", "simple_tasks"]
+    },
+    "advanced-server": {
+      "name": "Advanced MCP Server",
+      "description": "Advanced MCP server with file operations and enhanced features",
+      "command": ["python", "src/mcp_servers/advanced_server.py"],
+      "capabilities": {
+        "tools": ["file_read", "file_write", "directory_list", "csv_analyze", "data_summary"],
+        "resources": ["capabilities", "temp_workspace"],
+        "prompts": []
+      },
+      "dependencies": ["pandas"],
+      "recommended_for": ["file_management", "data_processing", "advanced_automation"]
+    },
+    "data-analysis-server": {
+      "name": "Data Analysis MCP Server",
+      "description": "Specialized MCP server for comprehensive data analysis",
+      "command": ["python", "src/mcp_servers/data_analysis_server.py"],
+      "capabilities": {
+        "tools": [
+          "load_dataset",
+          "dataset_info", 
+          "calculate_statistics",
+          "find_correlations",
+          "group_analysis",
+          "data_quality_check",
+          "generate_insights"
+        ],
+        "resources": ["loaded_datasets", "analysis_guide", "dataset/*"],
+        "prompts": []
+      },
+      "dependencies": ["pandas", "numpy"],
+      "recommended_for": ["data_analysis", "statistics", "business_intelligence", "research"]
+    }
+  },
+  "client_examples": {
+    "basic_demo": {
+      "description": "Demonstrates basic server functionality",
+      "command": ["python", "src/clients/client_example.py", "basic"]
+    },
+    "data_demo": {
+      "description": "Demonstrates data analysis server functionality", 
+      "command": ["python", "src/clients/client_example.py", "data"]
+    },
+    "interactive": {
+      "description": "Interactive client session with user input",
+      "command": ["python", "src/clients/client_example.py", "interactive"]
+    }
+  },
+  "sample_data": {
+    "employees": {
+      "file": "data/sample_data.csv",
+      "description": "Sample employee dataset for data analysis examples",
+      "columns": ["name", "age", "department", "salary", "experience_years", "performance_score"],
+      "rows": 20,
+      "use_cases": ["correlation_analysis", "group_analysis", "statistical_summaries"]
+    }
+  }
+}

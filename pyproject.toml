@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-data-analysis-toolkit"
+version = "1.0.0"
+description = "Production-ready MCP (Model Context Protocol) toolkit for data analysts and AI enthusiasts - Transform complex datasets into actionable insights with AI-powered workflows"
+authors = [{name = "Vijay Andem", email = "vjandem@example.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["mcp", "model-context-protocol", "data-analysis", "ai", "business-intelligence", "claude-desktop", "power-bi", "tableau", "streamlit", "automated-analytics"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Financial :: Spreadsheet",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "httpx>=0.24.0",
+    "anyio>=3.6.0",
+    "pydantic>=2.0.0",
+    "click>=8.0.0",
+    "pandas>=2.0.0",
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/And3m/mcp-data-analysis-toolkit"
+"Bug Reports" = "https://github.com/And3m/mcp-data-analysis-toolkit/issues"
+"Source" = "https://github.com/And3m/mcp-data-analysis-toolkit"
+"Documentation" = "https://github.com/And3m/mcp-data-analysis-toolkit/blob/main/docs/setup/getting-started.md"
+"LinkedIn" = "https://www.linkedin.com/in/vijay-andem-b2092223/"
+"Twitter" = "https://x.com/vjandem"
+
+[project.scripts]
+mcp-basic-server = "src.mcp_servers.basic_server:main"
+mcp-advanced-server = "src.mcp_servers.advanced_server:main"
+mcp-data-analysis-server = "src.mcp_servers.data_analysis_server:main"
+mcp-client-demo = "src.clients.client_example:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
