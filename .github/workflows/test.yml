@@ -30,10 +30,11 @@ jobs:
     - name: Run comprehensive tests
       run: |
         python tests/test_mcp.py
+        python tests/test_enhanced_mcp.py
     
-    - name: Run demo script
+    - name: Run client demo
       run: |
-        python examples/demo.py
+        python src/clients/client_example.py basic
     
     - name: Test server startup
       run: |
@@ -45,8 +46,8 @@ jobs:
     - name: Check code formatting
       run: |
         pip install black isort
-        black --check src/ tests/ examples/ || echo "Code formatting issues found"
-        isort --check-only src/ tests/ examples/ || echo "Import sorting issues found"
+        black --check src/ tests/ || echo "Code formatting issues found"
+        isort --check-only src/ tests/ || echo "Import sorting issues found"
     
     - name: Type checking
       run: |

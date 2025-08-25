@@ -20,6 +20,10 @@
 - **📊 Business Intelligence Ready**: Tools designed for real-world BI scenarios
 - **⚡ Modern Architecture**: Clean, scalable Python implementation with async patterns
 - **🧪 Fully Tested**: Comprehensive test suite with CI/CD pipeline
+- **📝 Enhanced Logging**: Structured logging with file and console output for monitoring
+- **🔒 Security First**: Safe expression evaluation with comprehensive input validation
+- **📤 Multi-format Export**: Export analysis to JSON, CSV, HTML formats
+- **🔍 Advanced Filtering**: Dynamic data filtering and transformation capabilities
 
 ## 🏗️ Project Structure
 
@@ -74,13 +78,16 @@ pip install -r requirements.txt
 ### 2. Run the Demo
 ```bash
 # Interactive demonstration of all features
-python examples/demo.py
+python src/clients/client_example.py
 ```
 
 ### 3. Test Everything
 ```bash
 # Comprehensive test suite
 python tests/test_mcp.py
+
+# Enhanced test suite with new features
+python tests/test_enhanced_mcp.py
 ```
 
 ### 4. Try Data Analysis
@@ -128,13 +135,16 @@ mcp-client-demo
 - 🔒 Safe file access controls
 
 ### 📊 Data Analysis Server (`src/mcp_servers/data_analysis_server.py`)
-**Comprehensive business intelligence toolkit**
+**Comprehensive business intelligence toolkit with enhanced capabilities**
 - 📥 Dataset loading (CSV, JSON)
 - 📊 Statistical analysis and summaries
-- 🔗 Correlation discovery
-- 📝 Data quality assessment
-- 🔍 Automated insights generation
+- 🔗 Correlation discovery with multiple methods
+- 📝 Data quality assessment and validation
+- 🔍 Automated insights generation with AI recommendations
 - 📋 Group analysis and segmentation
+- 🔄 Data filtering and transformation
+- 📤 Multi-format export (JSON, CSV, HTML reports)
+- 📝 Analysis history tracking and logging
 - 🎨 Perfect for Power BI/Tableau prep work
 
 ## 🖥️ Claude Desktop Integration
@@ -200,6 +210,34 @@ pip install -r requirements.txt
 
 **📁 Detailed Setup Guide**: [Claude Desktop Integration](docs/setup/claude-desktop-setup.md)
 
+---
+
+## 🚀 Enhanced Features (v2.0)
+
+### 📊 **Advanced Data Analysis**
+- **Multi-format Export**: Export your analysis results to JSON, CSV, or HTML reports
+- **Dynamic Filtering**: Filter datasets with complex conditions and create new filtered datasets
+- **Analysis History**: Track all analysis operations with detailed logging
+- **Enhanced Error Handling**: Comprehensive error handling with detailed logging
+
+### 🔒 **Security & Monitoring**
+- **Safe Expression Evaluation**: Secure mathematical expression parsing with input validation
+- **Structured Logging**: File and console logging with configurable levels
+- **Performance Monitoring**: Track dataset operations and memory usage
+- **Input Validation**: Comprehensive validation for all tool inputs
+
+### 💡 **New Tools Available**
+- `export_analysis`: Export analysis results in multiple formats
+- `filter_data`: Create filtered datasets based on conditions
+- `analysis_history`: View history of all analysis operations
+- Enhanced insight generation with more detailed recommendations
+
+### 🧪 **Enhanced Testing**
+- **Comprehensive Test Suite**: Over 13 test cases covering all functionality
+- **Error Scenario Testing**: Tests for edge cases and error conditions
+- **Performance Testing**: Memory usage and export functionality tests
+- **Integration Testing**: End-to-end server startup and client connection tests
+
 ## 🎯 Perfect For
 
 ### 📊 Data Analysts & BI Professionals
@@ -231,10 +269,12 @@ pip install -r requirements.txt
 ## 🏆 Recognition
 
 This project demonstrates:
-- **Advanced Python Development** with modern async patterns
-- **AI Protocol Implementation** using cutting-edge MCP standard
-- **Data Analysis Automation** for business intelligence
-- **Production-Ready Code** with comprehensive testing and documentation
+- **Advanced Python Development** with modern async patterns and structured logging
+- **AI Protocol Implementation** using cutting-edge MCP standard with security best practices
+- **Data Analysis Automation** for business intelligence with multi-format export capabilities
+- **Production-Ready Code** with comprehensive testing, error handling, and monitoring
+- **Enterprise Security** with input validation and safe expression evaluation
+- **Scalable Architecture** with modular design and extensible plugin system
 
 ## 🤝 Contributing
 

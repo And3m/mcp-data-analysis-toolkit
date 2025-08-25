@@ -11,9 +11,11 @@ Specialized MCP server for data analysts with:
 
 import asyncio
 import json
+import logging
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import mcp.server.stdio
@@ -27,6 +29,19 @@ try:
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
+    pd = None
+    np = None
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stderr),
+        logging.FileHandler('mcp_data_analysis.log')
+    ]
+)
+logger = logging.getLogger(__name__)
 
 
 class DataAnalysisMCPServer:
@@ -35,6 +50,8 @@ class DataAnalysisMCPServer:
     def __init__(self):
         self.server = Server("data-analysis-mcp-server")
         self.datasets = {}  # Cache for loaded datasets
+        self.analysis_history = []  # Track analysis operations
+        logger.info("Initializing Data Analysis MCP Server")
         self.setup_handlers()
     
     def setup_handlers(self):
@@ -130,6 +147,32 @@ class DataAnalysisMCPServer:
                         },
                         "required": ["name"]
                     }
+                ),
+                types.Tool(
+                    name="export_analysis",
+                    description="Export analysis results to various formats",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string", "description": "Dataset name"},
+                            "format": {"type": "string", "enum": ["json", "csv", "html"], "default": "json"},
+                            "output_path": {"type": "string", "description": "Output file path"}
+                        },
+                        "required": ["name", "output_path"]
+                    }
+                ),
+                types.Tool(
+                    name="filter_data",
+                    description="Filter dataset based on conditions",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string", "description": "Dataset name"},
+                            "conditions": {"type": "array", "items": {"type": "object"}, "description": "Filter conditions"},
+                            "new_name": {"type": "string", "description": "Name for filtered dataset"}
+                        },
+                        "required": ["name", "conditions", "new_name"]
+                    }
                 )
             ]
             
@@ -146,6 +189,8 @@ class DataAnalysisMCPServer:
                 )]
             
             try:
+                logger.info(f"Executing tool: {name} with arguments: {arguments}")
+                
                 if name == "load_dataset":
                     path = arguments["path"]
                     dataset_name = arguments["name"]
@@ -168,6 +213,14 @@ class DataAnalysisMCPServer:
                     result += f"Shape: {df.shape[0]} rows, {df.shape[1]} columns\n"
                     result += f"Columns: {list(df.columns)}\n"
                     result += f"Memory usage: {df.memory_usage(deep=True).sum() / 1024:.2f} KB"
+                    
+                    logger.info(f"Successfully loaded dataset '{dataset_name}' with shape {df.shape}")
+                    self.analysis_history.append({
+                        "action": "load_dataset",
+                        "dataset": dataset_name,
+                        "timestamp": datetime.now().isoformat(),
+                        "details": {"shape": df.shape, "columns": list(df.columns)}
+                    })
                     
                     return [types.TextContent(type="text", text=result)]
                 
@@ -394,15 +447,118 @@ class DataAnalysisMCPServer:
                                 except:
                                     pass
                     
+                    self.analysis_history.append({
+                        "action": "generate_insights",
+                        "dataset": dataset_name,
+                        "focus": focus,
+                        "timestamp": datetime.now().isoformat()
+                    })
+                    
                     return [types.TextContent(
                         type="text",
                         text=f"Data Insights for '{dataset_name}':\n\n" + "\n".join(insights)
                     )]
                 
+                elif name == "export_analysis":
+                    dataset_name = arguments["name"]
+                    format_type = arguments.get("format", "json")
+                    output_path = arguments["output_path"]
+                    
+                    if dataset_name not in self.datasets:
+                        return [types.TextContent(type="text", text=f"Dataset '{dataset_name}' not found.")]
+                    
+                    df = self.datasets[dataset_name]
+                    
+                    # Create output directory if it doesn't exist
+                    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+                    
+                    if format_type == "csv":
+                        df.to_csv(output_path, index=False)
+                    elif format_type == "json":
+                        analysis_report = {
+                            "dataset_name": dataset_name,
+                            "shape": df.shape,
+                            "columns": list(df.columns),
+                            "dtypes": df.dtypes.astype(str).to_dict(),
+                            "statistics": df.describe().to_dict() if len(df.select_dtypes(include=[np.number]).columns) > 0 else {},
+                            "missing_data": df.isnull().sum().to_dict(),
+                            "sample_data": df.head().to_dict(orient='records'),
+                            "export_timestamp": datetime.now().isoformat()
+                        }
+                        with open(output_path, 'w') as f:
+                            json.dump(analysis_report, f, indent=2, default=str)
+                    elif format_type == "html":
+                        html_content = f"""
+                        <!DOCTYPE html>
+                        <html>
+                        <head><title>Data Analysis Report - {dataset_name}</title></head>
+                        <body>
+                        <h1>Data Analysis Report: {dataset_name}</h1>
+                        <h2>Dataset Overview</h2>
+                        <p>Shape: {df.shape[0]} rows, {df.shape[1]} columns</p>
+                        <h2>Sample Data</h2>
+                        {df.head(10).to_html()}
+                        <h2>Statistics</h2>
+                        {df.describe().to_html() if len(df.select_dtypes(include=[np.number]).columns) > 0 else '<p>No numeric columns for statistics</p>'}
+                        </body>
+                        </html>
+                        """
+                        with open(output_path, 'w') as f:
+                            f.write(html_content)
+                    
+                    logger.info(f"Exported analysis for '{dataset_name}' to {output_path}")
+                    return [types.TextContent(
+                        type="text",
+                        text=f"Successfully exported '{dataset_name}' analysis to {output_path} ({format_type} format)"
+                    )]
+                
+                elif name == "filter_data":
+                    dataset_name = arguments["name"]
+                    conditions = arguments["conditions"]
+                    new_name = arguments["new_name"]
+                    
+                    if dataset_name not in self.datasets:
+                        return [types.TextContent(type="text", text=f"Dataset '{dataset_name}' not found.")]
+                    
+                    df = self.datasets[dataset_name].copy()
+                    original_shape = df.shape
+                    
+                    # Apply filters (simplified implementation)
+                    for condition in conditions:
+                        if "column" in condition and "operator" in condition and "value" in condition:
+                            col = condition["column"]
+                            op = condition["operator"]
+                            val = condition["value"]
+                            
+                            if col in df.columns:
+                                if op == "==":
+                                    df = df[df[col] == val]
+                                elif op == "!=":
+                                    df = df[df[col] != val]
+                                elif op == ">":
+                                    df = df[df[col] > val]
+                                elif op == "<":
+                                    df = df[df[col] < val]
+                                elif op == ">=":
+                                    df = df[df[col] >= val]
+                                elif op == "<=":
+                                    df = df[df[col] <= val]
+                    
+                    self.datasets[new_name] = df
+                    
+                    result = f"Filtered dataset '{dataset_name}' → '{new_name}'\n"
+                    result += f"Original shape: {original_shape}\n"
+                    result += f"Filtered shape: {df.shape}\n"
+                    result += f"Filters applied: {len(conditions)}"
+                    
+                    logger.info(f"Created filtered dataset '{new_name}' from '{dataset_name}'")
+                    return [types.TextContent(type="text", text=result)]
+                
                 else:
                     return [types.TextContent(type="text", text=f"Unknown tool: {name}")]
                     
             except Exception as e:
+                logger.error(f"Error executing tool '{name}': {str(e)}", exc_info=True)
                 return [types.TextContent(type="text", text=f"Error: {str(e)}")]
         
         @self.server.list_resources()
@@ -420,6 +576,12 @@ class DataAnalysisMCPServer:
                     name="Data Analysis Guide",
                     description="Guide for performing data analysis with this server",
                     mimeType="text/plain"
+                ),
+                types.Resource(
+                    uri=AnyUrl("data://analysis_history"),
+                    name="Analysis History",
+                    description="History of analysis operations performed",
+                    mimeType="application/json"
                 )
             ]
             
@@ -502,6 +664,9 @@ This server provides comprehensive data analysis capabilities for data analysts.
 """
                 return guide.strip()
             
+            elif uri_str == "data://analysis_history":
+                return json.dumps(self.analysis_history, indent=2, default=str)
+            
             elif uri_str.startswith("data://dataset/"):
                 dataset_name = uri_str.split("/")[-1]
                 if dataset_name in self.datasets:
@@ -539,16 +704,25 @@ This server provides comprehensive data analysis capabilities for data analysts.
 
 def main():
     """Main entry point for the data analysis server."""
-    print("Starting Data Analysis MCP Server...", file=sys.stderr)
+    logger.info("Starting Data Analysis MCP Server...")
+    
     if not PANDAS_AVAILABLE:
+        logger.error("pandas is required for data analysis features")
         print("Error: pandas is required for data analysis features.", file=sys.stderr)
         print("Install with: pip install pandas numpy", file=sys.stderr)
         sys.exit(1)
     
+    logger.info("Data analysis tools ready for use!")
     print("Data analysis tools ready for use!", file=sys.stderr)
     
-    server = DataAnalysisMCPServer()
-    asyncio.run(server.run())
+    try:
+        server = DataAnalysisMCPServer()
+        asyncio.run(server.run())
+    except KeyboardInterrupt:
+        logger.info("Server stopped by user")
+    except Exception as e:
+        logger.error(f"Server error: {e}", exc_info=True)
+        sys.exit(1)
 
 
 # Export the class for importing
