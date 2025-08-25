@@ -4,9 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green.svg)](https://modelcontextprotocol.io/)
 [![Claude Desktop](https://img.shields.io/badge/Claude%20Desktop-Compatible-purple.svg)](https://claude.ai/download)
-[![GitHub stars](https://img.shields.io/github/stars/vjandem/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/vjandem/mcp-data-analysis-toolkit/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/vjandem/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/vjandem/mcp-data-analysis-toolkit/network)
-[![GitHub issues](https://img.shields.io/github/issues/vjandem/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/vjandem/mcp-data-analysis-toolkit/issues)
+[![GitHub stars](https://img.shields.io/github/stars/And3m/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/And3m/mcp-data-analysis-toolkit/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/And3m/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/And3m/mcp-data-analysis-toolkit/network)
+[![GitHub issues](https://img.shields.io/github/issues/And3m/mcp-data-analysis-toolkit.svg?style=for-the-badge)](https://github.com/And3m/mcp-data-analysis-toolkit/issues)
 
 **Production-ready MCP (Model Context Protocol) toolkit designed for data analysts and AI enthusiasts.** Transform complex datasets into compelling insights with AI-powered analysis workflows.
 
@@ -139,30 +139,66 @@ mcp-client-demo
 
 ## 🖥️ Claude Desktop Integration
 
-<div align="center">
-  <img src="assets/screenshots/claude-desktop-demo.png" alt="Claude Desktop Demo" width="800">
-  <p><em>🤖 Natural language data analysis with Claude Desktop integration</em></p>
-</div>
+> **🎯 Transform Claude Desktop into your Personal Data Analysis Assistant!**
 
-Transform Claude Desktop into your personal data analysis assistant!
+### 📸 **Screenshots Gallery**
 
-### Quick Setup:
-1. **Copy Configuration**: Use `claude_desktop_config.json` as template
-2. **Update Paths**: Replace `YOUR_PROJECT_PATH` with your installation path
-3. **Restart Claude**: Restart Claude Desktop completely
-4. **Start Analyzing**: Ask Claude to analyze your data!
+| **🤖 AI-Powered Analysis** | **📊 Complete Workflow** | **⚙️ Simple Configuration** |
+|:-------------------------:|:------------------------:|:----------------------------:|
+| ![Claude Desktop Demo](assets/screenshots/claude-desktop-demo.png) | ![Data Analysis Workflow](assets/screenshots/data-analysis-workflow.png) | ![MCP Configuration](assets/screenshots/mcp-server-configuration.png) |
+| **Natural Language Data Analysis**<br>*Ask Claude to analyze your data using simple English* | **Automated Statistical Processing**<br>*From raw data to insights in minutes* | **Easy Setup Process**<br>*Configure once, analyze forever* |
 
-### Example Usage:
+### 🚀 **See It In Action**
+
+**1. 🤖 Claude Desktop Demo**
 ```
-"Please load the sales data from data/sample_data.csv and provide:
-- Comprehensive statistical summary
-- Correlation analysis between variables
-- Data quality assessment
-- Department performance insights
-- Recommendations for dashboard creation"
+User: "Analyze the sales data and show me department performance"
+Claude: *Automatically loads data, calculates statistics, finds correlations, and provides insights*
 ```
 
-**Detailed setup instructions**: [Claude Desktop Setup Guide](docs/setup/claude-desktop-setup.md)
+**2. 📊 Complete Workflow**
+- ✅ Load datasets instantly
+- 🔍 Automated data quality checks
+- 📈 Statistical summaries
+- 🎯 Correlation analysis
+- 💡 AI-generated insights
+
+**3. ⚙️ Simple Setup**
+- 📋 Copy configuration template
+- ✏️ Update your project path
+- 🔄 Restart Claude Desktop
+- 🚀 Start analyzing immediately!
+
+---
+
+### 🛠️ **Quick Claude Desktop Setup**
+
+#### 🚀 **3-Step Installation**
+
+```bash
+# 1️⃣ Clone and Setup
+git clone https://github.com/And3m/mcp-data-analysis-toolkit.git
+cd mcp-data-analysis-toolkit
+pip install -r requirements.txt
+
+# 2️⃣ Configure Claude Desktop
+# Copy claude_desktop_config.json to Claude's config directory
+# Update YOUR_PROJECT_PATH with your installation path
+
+# 3️⃣ Restart Claude Desktop and start analyzing!
+```
+
+#### 💬 **Example Analysis Request**
+```
+"Please load the employee data from data/sample_data.csv and provide:
+• Comprehensive statistical summary
+• Correlation analysis between salary and performance
+• Department-wise performance insights
+• Data quality assessment
+• Recommendations for dashboard creation"
+```
+
+**📁 Detailed Setup Guide**: [Claude Desktop Integration](docs/setup/claude-desktop-setup.md)
 
 ## 🎯 Perfect For
 
